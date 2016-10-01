@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
+import de.fhpotsdam.unfolding.data.GeoJSONReader;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.Microsoft;
@@ -32,9 +33,14 @@ public class ScienceGNIMap extends PApplet{
 	
 	public void setup() {
 		size(800, 600, OPENGL);
-		//map = new UnfoldingMap(this, 50, 50, 700, 500, new Microsoft.RoadProvider()); 
 		map = new UnfoldingMap(this, 50, 50, 700, 500, new Microsoft.AerialProvider()); 
 		MapUtils.createDefaultEventDispatcher(this, map);
+		
+		countries = GeoJSONReader.loadData(this, "countries.geo.json");
+		countryMarkers = MapUtils.createSimpleMarkers(countries);
+		map.addMarkers(countryMarkers);
+		System.out.println(countryMarkers.get(0).getId());
+		
 	}
 	
 	public void draw() {
