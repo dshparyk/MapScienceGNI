@@ -36,6 +36,10 @@ public class ScienceGNIMap extends PApplet{
 		map = new UnfoldingMap(this, 50, 50, 700, 500, new Microsoft.AerialProvider()); 
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
+		gniMap = ParseFeed.loadGNIFromCSV(this, "GNIPPPWorldBank.cvs");
+		researchesMap = ParseFeed.loadResearchesFromCSV(this, "ResearchersWorldBank.cvs");
+		scientificMap = ParseFeed.loadScientificFromCSV(this, "ScientificJournalsWorldBank.cvs");
+		
 		countries = GeoJSONReader.loadData(this, "countries.geo.json");
 		countryMarkers = MapUtils.createSimpleMarkers(countries);
 		map.addMarkers(countryMarkers);
