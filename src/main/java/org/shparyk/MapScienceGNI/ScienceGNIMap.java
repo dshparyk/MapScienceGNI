@@ -35,20 +35,38 @@ public class ScienceGNIMap extends PApplet{
 		size(800, 600, OPENGL);
 		map = new UnfoldingMap(this, 50, 50, 700, 500, new Microsoft.AerialProvider()); 
 		MapUtils.createDefaultEventDispatcher(this, map);
-		
-		gniMap = ParseFeed.loadGNIFromCSV(this, "GNIPPPWorldBank.cvs");
-		researchesMap = ParseFeed.loadResearchesFromCSV(this, "ResearchersWorldBank.cvs");
-		scientificMap = ParseFeed.loadScientificFromCSV(this, "ScientificJournalsWorldBank.cvs");
-		
+		System.out.println("Test1");
+		gniMap = ParseFeed.loadGNIFromCSV(this, "GNIPPPWorldBank.csv");
+		System.out.println("Test2");
+		researchesMap = ParseFeed.loadResearchesFromCSV(this, "ResearchersWorldBank.csv");
+		scientificMap = ParseFeed.loadScientificFromCSV(this, "ScientificJournalsWorldBank.csv");
 		countries = GeoJSONReader.loadData(this, "countries.geo.json");
 		countryMarkers = MapUtils.createSimpleMarkers(countries);
 		map.addMarkers(countryMarkers);
 		System.out.println(countryMarkers.get(0).getId());
 		
+		shadeGNI();
 	}
-	
+
 	public void draw() {
 		background(57, 233, 239);
 		map.draw();
+	}
+	
+	private void shadeGNI() {
+		for (Marker marker : countryMarkers) {
+			// Find data for country of the current marker
+			String countryId = marker.getId();
+			System.out.println(gniMap.containsKey(countryId));
+			if (gniMap.containsKey(countryId)) {
+				float gni = gniMap.get(countryId);
+				// Encode value as brightness (values range: 40-90)
+				int colorLevel = (int) map(gni, 230, 141000, 10, 255);
+				marker.setColor(color(255-colorLevel, 100, colorLevel));
+			}
+			else {
+				marker.setColor(color(150,150,150));
+			}
+		}
 	}
 }
